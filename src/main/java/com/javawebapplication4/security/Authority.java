@@ -32,7 +32,7 @@ public class Authority implements GrantedAuthority {
         this.authority = authority;
     }
 
-    @ManyToOne()
+    @ManyToOne
     public User getUser() {
         return user;
     }
