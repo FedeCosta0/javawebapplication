@@ -61,11 +61,11 @@ public class User {
     public void setAuthorities(Set<Authority> authorities) {
         this.authorities = authorities;
     }
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
     public Set<Request> getRequests() {
         return requests;
     }
-
     public void setRequests(Set<Request> requests) {
         this.requests = requests;
     }

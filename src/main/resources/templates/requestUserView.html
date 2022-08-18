@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script th:replace="fragments/header :: headerElement"></script>
+    <title th:text="${request.name}">FreshVotes Request</title>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container" th:if="${request != null}">
+    <h1 th:text="${request.name}">Request</h1>
+
+
+
+</div>
+</body>
+</html>

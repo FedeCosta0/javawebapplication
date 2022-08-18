@@ -6,6 +6,7 @@ import javax.persistence.*;
 public class Request {
 
     private Long id;
+    private String name;
     private String image;
     private String description;
     private User user;
@@ -28,6 +29,7 @@ public class Request {
         this.image = image;
     }
 
+    @Column(length = 1000)
     public String getDescription() {
         return description;
     }
@@ -49,5 +51,12 @@ public class Request {
     }
     public void setPublished(Boolean published) {
         this.published = published;
+    }
+
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
     }
 }
