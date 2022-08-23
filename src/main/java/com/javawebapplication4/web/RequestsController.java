@@ -3,7 +3,6 @@ package com.javawebapplication4.web;
 
 import com.javawebapplication4.domain.Request;
 import com.javawebapplication4.domain.User;
-import com.javawebapplication4.repositories.RequestRepository;
 import com.javawebapplication4.service.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -75,7 +74,6 @@ public class RequestsController {
         requestService.getRequestRepository().deleteById(idToBeDeleted);
         return "redirect:/requests";
     }
-
 
 
     @GetMapping("/accept/{requestId}")

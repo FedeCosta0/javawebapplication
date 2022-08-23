@@ -16,6 +16,7 @@ public class Request {
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -23,6 +24,7 @@ public class Request {
     public String getImage() {
         return image;
     }
+
     public void setImage(String image) {
         this.image = image;
     }
@@ -31,6 +33,7 @@ public class Request {
     public String getDescription() {
         return description;
     }
+
     public void setDescription(String description) {
         this.description = description;
     }
@@ -39,6 +42,7 @@ public class Request {
     public User getUser() {
         return user;
     }
+
     public void setUser(User user) {
         this.user = user;
     }
@@ -46,6 +50,7 @@ public class Request {
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -53,6 +58,7 @@ public class Request {
     public Boolean getAccepted() {
         return accepted;
     }
+
     public void setAccepted(Boolean accepted) {
         this.accepted = accepted;
     }
@@ -61,6 +67,6 @@ public class Request {
     public String getPhotosImagePath() {
         if (image == null || id == null) return null;
 
-        return "/requests_images/"+ this.getUser().getLastname() + "_" + this.getName() + "/" + image;
+        return "/requests_images/" + this.getUser().getLastname() + "_" + this.getName() + "/" + image;
     }
 }

@@ -2,6 +2,9 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+.gitignore
+mvnw
+mvnw.cmd
 
 ### STS ###
 .apt_generated
@@ -30,3 +33,5 @@ build/
 
 ### VS Code ###
 .vscode/
+/.mvn/
+/src/main/resources/static/images/

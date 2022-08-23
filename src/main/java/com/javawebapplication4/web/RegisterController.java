@@ -13,7 +13,7 @@ public class RegisterController {
     private final UserService userService;
 
     @Autowired
-    public RegisterController(UserService userService){
+    public RegisterController(UserService userService) {
         this.userService = userService;
     }
 
@@ -24,7 +24,7 @@ public class RegisterController {
     }
 
     @PostMapping("/register")
-    public String register(User user){
+    public String register(User user) {
         userService.save(user);
         return "redirect:/login";
     }
