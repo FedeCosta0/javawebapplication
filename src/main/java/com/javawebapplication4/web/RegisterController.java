@@ -18,13 +18,13 @@ public class RegisterController {
     }
 
     @GetMapping("/register")
-    public String registerGet(ModelMap model) {
+    public String registerForm(ModelMap model) {
         model.put("user", new User());
         return "register";
     }
 
     @PostMapping("/register")
-    public String registerPost(User user){
+    public String register(User user){
         userService.save(user);
         return "redirect:/login";
     }

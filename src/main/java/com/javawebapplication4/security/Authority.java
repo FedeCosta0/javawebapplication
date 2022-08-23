@@ -8,7 +8,6 @@ import java.io.Serial;
 
 @Entity
 public class Authority implements GrantedAuthority {
-
     @Serial
     private static final long serialVersionUID = 1272548942962614584L;
     private Long id;

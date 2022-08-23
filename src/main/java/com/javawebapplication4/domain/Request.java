@@ -4,14 +4,12 @@ import javax.persistence.*;
 
 @Entity
 public class Request {
-
     private Long id;
     private String name;
     private String image;
     private String description;
     private User user;
-    private Boolean published;
-
+    private Boolean accepted;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,18 +43,24 @@ public class Request {
         this.user = user;
     }
 
-
-    public Boolean getPublished() {
-        return published;
-    }
-    public void setPublished(Boolean published) {
-        this.published = published;
-    }
-
     public String getName() {
         return name;
     }
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Boolean getAccepted() {
+        return accepted;
+    }
+    public void setAccepted(Boolean accepted) {
+        this.accepted = accepted;
+    }
+
+    @Transient
+    public String getPhotosImagePath() {
+        if (image == null || id == null) return null;
+
+        return "/requests_images/"+ this.getUser().getLastname() + "_" + this.getName() + "/" + image;
     }
 }
