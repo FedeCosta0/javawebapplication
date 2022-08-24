@@ -12,6 +12,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Objects;
 
+/*
+Service class for setting up the Request before saving it
+*/
 @Service
 public class RequestService {
     private final RequestRepository requestRepository;
@@ -23,15 +26,16 @@ public class RequestService {
 
     public Request save(Request request, User user, MultipartFile multipartFile) throws IOException {
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
-        request.setImage(fileName);
+        request.setImageName(fileName);
         request.setUser(user);
         request.setAccepted(false);
 
         String uploadDir = "request-images/" + user.getLastname() + "_" + request.getName();
+        request.setImagePath(uploadDir);
+
         FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 
         return requestRepository.save(request);
-
     }
 
     public RequestRepository getRequestRepository() {

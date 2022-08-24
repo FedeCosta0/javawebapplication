@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <head>
   <title>Requests</title>
   <script th:replace="fragments/header :: headerElement"></script>
@@ -28,12 +28,12 @@
           <a th:href="@{/requests/{requestId}(requestId=${request.id})}" class="btn btn-info" style="margin-top: 5.5em;" >View Request</a>
         </div>
         <div class="col-3" >
-          <img th:src="@{${request.photosImagePath}}" alt="image" class="img-thumbnail" height="300" width="300">
+          <img src="" th:src="@{${request.imagePath}}" alt="image" class="img-thumbnail" height="300" width="300">
         </div>
       </div>
     </div>
   </div>
-  <div class="row">
+  <div sec:authorize="!hasRole('ROLE_ADMIN')" class="row">
     <div class="col">
         <button class="btn btn-primary" id="createRequest">Create a Request</button>
     </div>

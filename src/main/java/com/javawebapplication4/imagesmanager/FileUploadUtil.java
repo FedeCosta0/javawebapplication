@@ -9,11 +9,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+/*
+Utility class used to upload images in a local directory
+*/
 public class FileUploadUtil {
 
-    public static void saveFile(String uploadDir, String fileName,
+    public static void saveFile(String uploadDirectory, String fileName,
                                 MultipartFile multipartFile) throws IOException {
-        Path uploadPath = Paths.get(uploadDir);
+        Path uploadPath = Paths.get(uploadDirectory);
 
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);

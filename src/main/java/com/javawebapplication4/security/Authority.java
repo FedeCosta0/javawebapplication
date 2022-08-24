@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.io.Serial;
+import java.util.Objects;
 
 @Entity
 public class Authority implements GrantedAuthority {
@@ -19,7 +20,6 @@ public class Authority implements GrantedAuthority {
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -28,7 +28,6 @@ public class Authority implements GrantedAuthority {
     public String getAuthority() {
         return this.authority;
     }
-
     public void setAuthority(String authority) {
         this.authority = authority;
     }
@@ -37,9 +36,18 @@ public class Authority implements GrantedAuthority {
     public User getUser() {
         return user;
     }
-
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @Transient
+    public Boolean isAdmin(){
+        if(Objects.equals(authority, "ROLE_ADMIN")){
+            return Boolean.TRUE;
+        }
+        else{
+            return Boolean.FALSE;
+        }
     }
 
 }

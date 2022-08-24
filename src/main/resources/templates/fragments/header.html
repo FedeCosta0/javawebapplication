@@ -33,11 +33,11 @@
               <li class="nav-item">
                 <a class="nav-link" href="/">Homepage</a>
               </li>
-              <li class="nav-item">
+              <li sec:authorize="!hasRole('ROLE_ADMIN')" class="nav-item">
                 <a class="nav-link" href="/requests">Requests</a>
               </li>
               <li sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item">
-                <a class="nav-link" href="/manage_requests">Manage Requests</a>
+                <a class="nav-link" href="/requests">Manage Requests</a>
               </li>
             </ul>
             <div class="navbar-nav ms-auto">

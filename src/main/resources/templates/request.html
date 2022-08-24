@@ -27,7 +27,7 @@
                     <input class="form-control"  type="file" name="image" id="image" accept="image/png, image/jpeg">
 
                 </div>
-                <img th:src="@{${request.photosImagePath}}" class="img-fluid img-thumbnail"  alt="image"/>
+                <img src="" th:src="@{${request.imagePath}}" class="img-fluid img-thumbnail"  alt="image"/>
                 <button type="submit" class="btn btn-primary btn-lg">Save Request</button>
             </form>
         </div>

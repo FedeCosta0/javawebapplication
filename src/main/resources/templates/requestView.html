@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <head>
     <script th:replace="fragments/header :: headerElement"></script>
     <title th:text="${request.name}">Request</title>
@@ -17,7 +17,7 @@
         </div>
         <div class="mb-3">
             <label for="image1" class="col-12 col-sm-3 col-md-2 col-form-label">Image:</label>
-            <img th:src="@{${request.photosImagePath}}" id="image1" class="col-12 col-sm-9 col-md-10" alt="image">
+            <img src="" th:src="@{${request.imagePath}}" id="image1" class="col-12 col-sm-9 col-md-10" alt="image">
         </div>
     </div>
     <div sec:authorize="hasRole('ROLE_ADMIN')" class="mb-3">

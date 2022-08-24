@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/*
+Service class for setting up the User before saving it
+*/
 @Service
 public class UserService {
     private final UserRepository userRepository;
