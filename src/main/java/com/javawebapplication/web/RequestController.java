@@ -1,9 +1,9 @@
-package com.javawebapplication4.web;
+package com.javawebapplication.web;
 
-import com.javawebapplication4.domain.Request;
-import com.javawebapplication4.domain.User;
-import com.javawebapplication4.security.Authority;
-import com.javawebapplication4.service.RequestService;
+
+import com.javawebapplication.domain.Request;
+import com.javawebapplication.domain.User;
+import com.javawebapplication.service.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -18,11 +18,11 @@ import java.io.IOException;
 import java.util.Optional;
 
 @Controller
-public class RequestsController {
+public class RequestController {
     private final RequestService requestService;
 
     @Autowired
-    public RequestsController(RequestService requestService) {
+    public RequestController(RequestService requestService) {
         this.requestService = requestService;
     }
 
@@ -35,11 +35,14 @@ public class RequestsController {
     @PostMapping("/request")
     public String createRequest(@RequestParam("image") MultipartFile multipartFile, @AuthenticationPrincipal User user,
                                 Request request) throws IOException {
+        if (request.getDescription().isEmpty()) {
+            return "redirect:/request/empty-description";
+        }
         requestService.save(request, user, multipartFile);
         return "redirect:/requests";
     }
 
-    @PostMapping("/requests/{requestId}")
+    @GetMapping("/delete/{requestId}")
     public String deleteRequest(@PathVariable Long requestId) {
         Optional<Request> requestToBeDeleted = requestService.getRequestRepository().findById(requestId);
         requestToBeDeleted.ifPresent(request -> requestService.getRequestRepository().delete(request));
@@ -55,20 +58,13 @@ public class RequestsController {
 
     @GetMapping("/requests")
     public String requestsList(@AuthenticationPrincipal User user, ModelMap model) {
-        Boolean isAdmin = Boolean.FALSE;
-
-        for (Authority authority: user.getAuthorities()) {
-            isAdmin = isAdmin || authority.isAdmin();
-        }
-
+        Boolean isAdmin = user.isAdmin();
         Iterable<Request> requests;
-        if(isAdmin){
+        if (isAdmin) {
             requests = requestService.getRequestRepository().findAll();
-        }
-        else{
+        } else {
             requests = requestService.getRequestRepository().findByUser(user);
         }
-
         model.put("requests", requests);
         return "requests";
     }
@@ -78,10 +74,17 @@ public class RequestsController {
         Optional<Request> requestToBeAccepted = requestService.getRequestRepository().findById(requestId);
         if (requestToBeAccepted.isPresent()) {
             Request request = requestToBeAccepted.get();
-            request.setAccepted(Boolean.TRUE);
-            requestService.getRequestRepository().save(request);
+            if (!request.getAccepted()) {
+                request.setAccepted(Boolean.TRUE);
+                requestService.getRequestRepository().save(request);
+            }
         }
-        return "redirect:/manage_requests";
+        return "redirect:/requests";
+    }
+
+    @GetMapping("/request/empty-description")
+    public String errorEmptyDescription() {
+        return "empty-description";
     }
 
 }

@@ -1,7 +1,7 @@
-package com.javawebapplication4.web;
+package com.javawebapplication.web;
 
-import com.javawebapplication4.domain.User;
-import com.javawebapplication4.service.UserService;
+import com.javawebapplication.domain.User;
+import com.javawebapplication.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -24,7 +24,7 @@ public class RegisterController {
     }
 
     @PostMapping("/register")
-    public String register(User user) {
+    public String register(User user) throws Exception {
         userService.save(user);
         return "redirect:/login";
     }

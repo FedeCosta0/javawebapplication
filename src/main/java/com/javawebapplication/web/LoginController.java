@@ -1,4 +1,4 @@
-package com.javawebapplication4.web;
+package com.javawebapplication.web;
 
 
 import org.springframework.stereotype.Controller;

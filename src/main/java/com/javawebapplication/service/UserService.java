@@ -1,8 +1,8 @@
-package com.javawebapplication4.service;
+package com.javawebapplication.service;
 
-import com.javawebapplication4.domain.User;
-import com.javawebapplication4.repositories.UserRepository;
-import com.javawebapplication4.security.Authority;
+import com.javawebapplication.domain.Authority;
+import com.javawebapplication.domain.User;
+import com.javawebapplication.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,12 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User save(User user) {
+    public User save(User user) throws Exception {
+
+        if (userRepository.existsUserByEmail(user.getEmail())) {
+            throw new Exception(
+                    "Email " + user.getEmail() + " taken");
+        }
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
 
@@ -32,4 +37,5 @@ public class UserService {
 
         return userRepository.save(user);
     }
+
 }

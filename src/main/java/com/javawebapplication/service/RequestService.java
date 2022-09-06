@@ -1,9 +1,9 @@
-package com.javawebapplication4.service;
+package com.javawebapplication.service;
 
-import com.javawebapplication4.domain.Request;
-import com.javawebapplication4.domain.User;
-import com.javawebapplication4.imagesmanager.FileUploadUtil;
-import com.javawebapplication4.repositories.RequestRepository;
+import com.javawebapplication.domain.Request;
+import com.javawebapplication.domain.User;
+import com.javawebapplication.image_manager.FileUploadUtil;
+import com.javawebapplication.repository.RequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -18,10 +18,13 @@ Service class for setting up the Request before saving it
 @Service
 public class RequestService {
     private final RequestRepository requestRepository;
+    private final FileUploadUtil fileUploadUtil;
+
 
     @Autowired
-    public RequestService(RequestRepository requestRepository) {
+    public RequestService(RequestRepository requestRepository, FileUploadUtil fileUploadUtil) {
         this.requestRepository = requestRepository;
+        this.fileUploadUtil = fileUploadUtil;
     }
 
     public Request save(Request request, User user, MultipartFile multipartFile) throws IOException {
@@ -30,11 +33,9 @@ public class RequestService {
         request.setUser(user);
         request.setAccepted(false);
 
-        String uploadDir = "request-images/" + user.getLastname() + "_" + request.getName();
-        request.setImagePath(uploadDir);
+        String uploadDir = "requests_images/" + user.getLastname() + "_" + user.getFirstname();
 
-        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-
+        fileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
         return requestRepository.save(request);
     }
 

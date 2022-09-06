@@ -1,6 +1,5 @@
-package com.javawebapplication4.security;
+package com.javawebapplication.domain;
 
-import com.javawebapplication4.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -41,13 +40,33 @@ public class Authority implements GrantedAuthority {
     }
 
     @Transient
-    public Boolean isAdmin(){
-        if(Objects.equals(authority, "ROLE_ADMIN")){
+    public Boolean isAdmin() {
+        if (Objects.equals(authority, "ROLE_ADMIN")) {
             return Boolean.TRUE;
-        }
-        else{
+        } else {
             return Boolean.FALSE;
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Authority authority1 = (Authority) o;
+        return Objects.equals(getId(), authority1.getId()) && Objects.equals(getAuthority(), authority1.getAuthority()) && Objects.equals(getUser(), authority1.getUser());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getAuthority(), getUser());
+    }
+
+    @Override
+    public String toString() {
+        return "Authority{" +
+                "id=" + id +
+                ", authority='" + authority + '\'' +
+                ", user=" + user +
+                '}';
+    }
 }

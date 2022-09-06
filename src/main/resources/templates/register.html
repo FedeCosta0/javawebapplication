@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>JavaWebApp register</title>
     <script th:replace="fragments/header :: headerElement"></script>
@@ -11,54 +11,62 @@
         });
     </script>
 </head>
-<body>
+<body style="background-color:ghostwhite">
 <div th:replace="fragments/header :: header"></div>
 <div class="container">
-    <div class="card" style="margin-top: 1.5em;">
-        <div class="card-header"><h2>Register For An Account</h2></div>
-        <div class="card-body">
-            <form action="" method="post">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <div class="col-8 mx-auto">
+        <div class="card" style="margin-top: 1.5em;">
+            <div class="card-header"><h2>Registrati</h2></div>
+            <div class="card-body">
+                <form action="" method="post">
+                    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
 
-                <div class="form-group row">
-                    <label for="firstname" class="col-md-2 col-form-label">Name:</label>
-                    <div class="col-md-10">
-                        <input type="text" class="form-control" id="firstname" th:field="${user.firstname}"/>
+                    <div class="form-group row">
+                        <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xxl-1 col-form-label"
+                               for="firstname">Nome</label>
+                        <div class="col-12 cl-sm-9 col-md-9 col-lg-10 col-xl-10 col-xxl-11">
+                            <input class="form-control" id="firstname" th:field="${user.firstname}" type="text"/>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group row" style="margin-top: 0.8em;">
-                    <label for="lastname" class="col-md-2 col-form-label">Lastname:</label>
-                    <div class="col-md-10">
-                        <input type="text" class="form-control" id="lastname" th:field="${user.lastname}"/>
+                    <div class="form-group row" style="margin-top: 0.8em;">
+                        <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xxl-1 col-form-label"
+                               for="lastname">Cognome</label>
+                        <div class="col-12 cl-sm-9 col-md-9 col-lg-10 col-xl-10 col-xxl-11">
+                            <input class="form-control" id="lastname" th:field="${user.lastname}" type="text"/>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group row" style="margin-top: 0.8em;">
-                    <label for="username" class="col-md-2 col-form-label">Email Address:</label>
-                    <div class="col-md-10">
-                        <input type="text" class="form-control" id="username" th:field="${user.email}"/>
+                    <div class="form-group row" style="margin-top: 0.8em;">
+                        <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xxl-1 col-form-label"
+                               for="username">Email</label>
+                        <div class="col-12 cl-sm-9 col-md-9 col-lg-10 col-xl-10 col-xxl-11">
+                            <input class="form-control" id="username" th:field="${user.email}" type="text"/>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group row" style="margin-top: 0.8em;">
-                    <label for="password" class="col-md-2 col-form-label">Password:</label>
-                    <div class="col-md-10">
-                        <input type="password" class="form-control" id="password" th:field="${user.password}"/>
+                    <div class="form-group row" style="margin-top: 0.8em;">
+                        <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xxl-1 col-form-label"
+                               for="password">Password</label>
+                        <div class="col-12 cl-sm-9 col-md-9 col-lg-10 col-xl-10 col-xxl-11">
+                            <input class="form-control" id="password" th:field="${user.password}" type="password"/>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group row" style="margin-top: 0.8em;">
-                    <label for="confirmPassword" class="col-md-2 col-form-label">Confirm Password:</label>
-                    <div class="col-md-10">
-                        <input type="password" class="form-control" id="confirmPassword"/>
+                    <div class="form-group row" style="margin-top: 0.8em;">
+                        <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xxl-1 col-form-label"
+                               for="confirmPassword">Conferma
+                            password</label>
+                        <div class="col-12 cl-sm-9 col-md-9 col-lg-10 col-xl-10 col-xxl-11">
+                            <input class="form-control" id="confirmPassword" type="password"/>
+                        </div>
                     </div>
-                </div>
-                <div  style="margin-top: 0.8em;">
-                    <button type="button" class="btn btn-lg btn-info" id="back">Back</button>
-                    <button type="submit" class="btn btn-lg btn-primary float-right">Create Account</button>
-                </div>
-            </form>
+                    <div style="margin-top: 0.8em;">
+                        <button class="btn btn-lg btn-info" id="back" type="button">Indietro</button>
+                        <button class="btn btn-lg btn-primary float-right" type="submit">Crea account</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

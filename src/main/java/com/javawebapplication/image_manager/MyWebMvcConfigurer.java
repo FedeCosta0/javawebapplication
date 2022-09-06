@@ -1,4 +1,4 @@
-package com.javawebapplication4.imagesmanager;
+package com.javawebapplication.image_manager;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.Nullable;
@@ -9,10 +9,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /*
-Expose the directory containing the uploaded images so the clients (web browsers) can access
+Expose the directory containing the uploaded images so that the clients (web browsers) can access
 */
 @Configuration
-public class MvcConfig implements WebMvcConfigurer {
+public class MyWebMvcConfigurer implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(@Nullable ResourceHandlerRegistry registry) {
         exposeDirectory("requests_images", registry);

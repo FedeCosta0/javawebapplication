@@ -1,40 +1,38 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
 <head>
     <script th:replace="fragments/header :: headerElement"></script>
-    <title th:text="${request.name}">Request</title>
+    <title>Request</title>
 </head>
-<body>
+<body style="background-color:ghostwhite">
 <div th:replace="fragments/header :: header"></div>
-    <div class="container" th:if="${request != null}">
-        <div sec:authorize="hasRole('ROLE_ADMIN')" class="mb-3">
-            <label for="name" class="col-12 col-sm-3 col-md-2 col-form-label">From:</label>
-            <div th:text="${request.user.getLastname()} + ' ' + ${request.user.getFirstname()}" id="name" class="col-12 col-sm-9 col-md-10">name</div>
-        </div>
-        <div class="mb-3">
-            <label for="description" class="col-12 col-sm-3 col-md-2 col-form-label">Description:</label>
-            <div th:text="${request.description}" id="description" class="col-12 col-sm-9 col-md-10">description</div>
-        </div>
-        <div class="mb-3">
-            <label for="image1" class="col-12 col-sm-3 col-md-2 col-form-label">Image:</label>
-            <img src="" th:src="@{${request.imagePath}}" id="image1" class="col-12 col-sm-9 col-md-10" alt="image">
+<div class="container" th:if="${request != null}">
+    <div class="mb-3" sec:authorize="hasRole('ROLE_ADMIN')">
+        <h5>Da parte di:</h5>
+        <div class="col-12 col-sm-9 col-md-10" id="name"
+             th:text="${request.user.getLastname()} + ' ' + ${request.user.getFirstname()}">name
         </div>
     </div>
-    <div sec:authorize="hasRole('ROLE_ADMIN')" class="mb-3">
-        <a th:href="@{/accept/{requestId}(requestId=${request.id})}" class="btn btn-primary" >Accept</a>
+    <div class="mb-3">
+        <h5>Descrizione e note per il tatuatore:</h5>
+        <div class="col-12 col-sm-9 col-md-10" id="description" th:text="${request.description}">description</div>
     </div>
-    <div sec:authorize="!hasRole('ROLE_ADMIN')" class="mb-3">
-        <form action="" method="post" >
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-            <div class="form-group row">
-                <label for="delete" class="col-md-2 col-form-label">Write "delete" here:</label>
-                <div class="col-md-10">
-                    <input type="text" class="form-control" name="delete" id="delete"/>
-                </div>
-            </div>
-            <button type="submit" class="btn btn-lg btn-danger float-right">DELETE</button>
+    <div class="mb-3">
+        <h5>Immagine di riferimento:</h5>
+        <img alt="Non è stata fornita un'immagine di riferimento" class="col-12 col-sm-9 col-md-10" id="image1" src=""
+             th:src="@{${request.imagePath}}">
+    </div>
+</div>
+<div class="col-3 mb-3 ms-auto" sec:authorize="!hasRole('ROLE_ADMIN')" th:if="!${request.accepted}">
+    <a class="btn btn-danger ms-auto" th:href="@{/delete/{requestId}(requestId=${request.id})}">Elimina richiesta</a>
+</div>
+<div class="col-3 mb-3 ms-auto" sec:authorize="hasRole('ROLE_ADMIN')" th:if="!${request.accepted}">
+    <a class="btn btn-primary" th:href="@{/accept/{requestId}(requestId=${request.id})}">Accetta Richiesta</a>
+</div>
+<div class="col-3 mb-3 ms-auto" sec:authorize="hasRole('ROLE_ADMIN')" th:if="${request.accepted}">
+    <a class="btn btn-success ms-auto" th:href="@{/delete/{requestId}(requestId=${request.id})}">Richiesta
+        completata</a>
+</div>
 
-        </form>
-    </div>
 </body>
 </html>

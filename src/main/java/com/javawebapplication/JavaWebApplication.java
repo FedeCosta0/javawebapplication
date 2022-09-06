@@ -1,13 +1,13 @@
-package com.javawebapplication4;
+package com.javawebapplication;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Javawebapplication4Application {
+public class JavaWebApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(Javawebapplication4Application.class, args);
+        SpringApplication.run(JavaWebApplication.class, args);
     }
 
 }

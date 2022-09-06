@@ -1,6 +1,6 @@
-package com.javawebapplication4.security;
+package com.javawebapplication.security;
 
-import com.javawebapplication4.domain.User;
+import com.javawebapplication.domain.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 
