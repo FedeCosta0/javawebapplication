@@ -16,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,16 +34,15 @@ class UserServiceTest {
     @DisplayName("Saving User: password correctly encoded")
     void isPasswordCorrectlyEncoded() throws Exception {
         // given
-        String password = "test_password";
-        User user = new User("user@user.com", password, "Mario", "Rossi");
+        String raw_password = "test_password";
+        User user = new User("user@user.com", raw_password, "Mario", "Rossi");
         when(userRepository.existsUserByEmail(any())).thenReturn(false);
-        when(userRepository.save(any())).thenReturn(user);
 
         // when
-        userService.save(user);
+        user = userService.create_user(user);
 
         // then
-        assertThat(passwordEncoder.matches(password, user.getPassword())).isEqualTo(true);
+        assertThat(passwordEncoder.matches(raw_password, user.getPassword())).isEqualTo(true);
     }
 
     @Test
@@ -52,17 +50,15 @@ class UserServiceTest {
     void isAuthorityCorrectlyAssigned() throws Exception {
         // given
         User user = new User("user@user.com", "password", "Mario", "Rossi");
-        when(userRepository.existsUserByEmail(any())).thenReturn(false);
-        when(userRepository.save(any())).thenReturn(user);
-
         Authority expected_authority = new Authority();
         expected_authority.setAuthority("ROLE_USER");
-        expected_authority.setUser(user);
+        when(userRepository.existsUserByEmail(any())).thenReturn(false);
 
         // when
-        userService.save(user);
+        user = userService.create_user(user);
 
         // then
+        assertThat(user.getAuthorities().size()).isEqualTo(1);
         assertThat(user.getAuthorities().contains(expected_authority)).isEqualTo(true);
     }
 
@@ -71,9 +67,10 @@ class UserServiceTest {
     void isRightUserProvidedToRepository() throws Exception {
         // given
         User user = new User("user@user.com", "user", "Mario", "Rossi");
+        when(userRepository.existsUserByEmail(any())).thenReturn(false);
 
         // when
-        userService.save(user);
+        userService.create_user(user);
 
         // then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
@@ -87,10 +84,10 @@ class UserServiceTest {
     void saveNewUserWithEmailTaken() {
         // given
         User user = new User("user@user.com", "user", "Mario", "Rossi");
-        willReturn(true).given(this.userRepository).existsUserByEmail(user.getEmail());
+        when(userRepository.existsUserByEmail(any())).thenReturn(true);
 
         // then
-        assertThatThrownBy(() -> userService.save(user)).isInstanceOf(Exception.class)
+        assertThatThrownBy(() -> userService.create_user(user)).isInstanceOf(Exception.class)
                 .hasMessageContaining("Email " + user.getEmail() + " taken");
         verify(userRepository, never()).save(any());
     }

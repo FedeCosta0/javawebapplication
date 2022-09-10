@@ -16,7 +16,7 @@ Utility class used to upload images in a local directory
 @Service
 public class FileUploadUtil {
 
-    public void saveFile(String uploadDirectory, String fileName, MultipartFile multipartFile) throws IOException {
+    public static void saveFile(String uploadDirectory, String fileName, MultipartFile multipartFile) throws IOException {
         Path uploadPath = Paths.get(uploadDirectory);
 
         if (!Files.exists(uploadPath)) {

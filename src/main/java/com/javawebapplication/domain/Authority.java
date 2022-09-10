@@ -49,24 +49,18 @@ public class Authority implements GrantedAuthority {
     }
 
     @Override
+    @Transient
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Authority authority1 = (Authority) o;
-        return Objects.equals(getId(), authority1.getId()) && Objects.equals(getAuthority(), authority1.getAuthority()) && Objects.equals(getUser(), authority1.getUser());
+        return Objects.equals(getAuthority(), authority1.getAuthority());
     }
 
     @Override
+    @Transient
     public int hashCode() {
-        return Objects.hash(getId(), getAuthority(), getUser());
+        return Objects.hash(getAuthority());
     }
 
-    @Override
-    public String toString() {
-        return "Authority{" +
-                "id=" + id +
-                ", authority='" + authority + '\'' +
-                ", user=" + user +
-                '}';
-    }
 }

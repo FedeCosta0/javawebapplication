@@ -28,6 +28,15 @@ public class User {
         this.authorities = new HashSet<>();
     }
 
+    public User(User user) {
+        this.email = user.getEmail();
+        this.password = user.getPassword();
+        this.firstname = getFirstname();
+        this.lastname = getLastname();
+        this.requests = user.getRequests();
+        this.authorities = user.getAuthorities();
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {
@@ -51,7 +60,7 @@ public class User {
         this.password = password;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
     public Set<Request> getRequests() {
         return requests;
     }
@@ -90,29 +99,32 @@ public class User {
         return result;
     }
 
+    @Transient
+    public void addAuthority(String authority_level) {
+        Authority authority = new Authority();
+        authority.setAuthority(authority_level);
+        authority.setUser(this);
+        authorities.add(authority);
+    }
+
+    @Transient
+    public void addRequest(Request request) {
+        this.requests.add(request);
+    }
+
     @Override
+    @Transient
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(getId(), user.getId()) && Objects.equals(getEmail(), user.getEmail()) && Objects.equals(getPassword(), user.getPassword()) && Objects.equals(getFirstname(), user.getFirstname()) && Objects.equals(getLastname(), user.getLastname());
+        return Objects.equals(getEmail(), user.getEmail()) && Objects.equals(getFirstname(), user.getFirstname()) && Objects.equals(getLastname(), user.getLastname());
     }
 
     @Override
+    @Transient
     public int hashCode() {
-        return Objects.hash(getId(), getEmail(), getPassword(), getFirstname(), getLastname());
+        return Objects.hash(getEmail(), getFirstname(), getLastname());
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", firstname='" + firstname + '\'' +
-                ", lastname='" + lastname + '\'' +
-                ", requests=" + requests +
-                ", authorities=" + authorities +
-                '}';
-    }
 }

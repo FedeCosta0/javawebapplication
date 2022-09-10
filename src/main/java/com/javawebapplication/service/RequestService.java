@@ -10,7 +10,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /*
 Service class for setting up the Request before saving it
@@ -18,28 +20,45 @@ Service class for setting up the Request before saving it
 @Service
 public class RequestService {
     private final RequestRepository requestRepository;
-    private final FileUploadUtil fileUploadUtil;
 
 
     @Autowired
-    public RequestService(RequestRepository requestRepository, FileUploadUtil fileUploadUtil) {
+    public RequestService(RequestRepository requestRepository) {
         this.requestRepository = requestRepository;
-        this.fileUploadUtil = fileUploadUtil;
+
     }
 
-    public Request save(Request request, User user, MultipartFile multipartFile) throws IOException {
+    public Request create_request(Request request, User user, MultipartFile multipartFile) throws IOException {
+        Request request_to_be_saved = new Request(request);
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
-        request.setImageName(fileName);
-        request.setUser(user);
-        request.setAccepted(false);
+        request_to_be_saved.setImageName(fileName);
+        request_to_be_saved.setUser(user);
 
         String uploadDir = "requests_images/" + user.getLastname() + "_" + user.getFirstname();
 
-        fileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+        user.addRequest(requestRepository.save(request_to_be_saved));
+        return request_to_be_saved;
+    }
+
+    public void delete(Request request){
+        requestRepository.delete(request);
+    }
+
+    public Optional<Request> findById(Long id){
+        return requestRepository.findById(id);
+    }
+
+    public Iterable<Request> findAll(){
+        return requestRepository.findAll();
+    }
+
+    public List<Request> findByUser(User user){
+        return requestRepository.findByUser(user);
+    }
+
+    public Request save(Request request){
         return requestRepository.save(request);
     }
 
-    public RequestRepository getRequestRepository() {
-        return requestRepository;
-    }
 }

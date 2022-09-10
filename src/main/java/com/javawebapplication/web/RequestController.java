@@ -38,20 +38,20 @@ public class RequestController {
         if (request.getDescription().isEmpty()) {
             return "redirect:/request/empty-description";
         }
-        requestService.save(request, user, multipartFile);
+        requestService.create_request(request, user, multipartFile);
         return "redirect:/requests";
     }
 
     @GetMapping("/delete/{requestId}")
     public String deleteRequest(@PathVariable Long requestId) {
-        Optional<Request> requestToBeDeleted = requestService.getRequestRepository().findById(requestId);
-        requestToBeDeleted.ifPresent(request -> requestService.getRequestRepository().delete(request));
+        Optional<Request> requestToBeDeleted = requestService.findById(requestId);
+        requestToBeDeleted.ifPresent(requestService::delete);
         return "redirect:/requests";
     }
 
     @GetMapping("/requests/{requestId}")
     public String requestView(@PathVariable Long requestId, ModelMap model) {
-        Optional<Request> requestOpt = requestService.getRequestRepository().findById(requestId);
+        Optional<Request> requestOpt = requestService.findById(requestId);
         requestOpt.ifPresent(request -> model.put("request", request));
         return "requestView";
     }
@@ -61,9 +61,9 @@ public class RequestController {
         Boolean isAdmin = user.isAdmin();
         Iterable<Request> requests;
         if (isAdmin) {
-            requests = requestService.getRequestRepository().findAll();
+            requests = requestService.findAll();
         } else {
-            requests = requestService.getRequestRepository().findByUser(user);
+            requests = requestService.findByUser(user);
         }
         model.put("requests", requests);
         return "requests";
@@ -71,12 +71,12 @@ public class RequestController {
 
     @GetMapping("/accept/{requestId}")
     public String acceptRequestAdmin(@PathVariable Long requestId) {
-        Optional<Request> requestToBeAccepted = requestService.getRequestRepository().findById(requestId);
+        Optional<Request> requestToBeAccepted = requestService.findById(requestId);
         if (requestToBeAccepted.isPresent()) {
             Request request = requestToBeAccepted.get();
             if (!request.getAccepted()) {
                 request.setAccepted(Boolean.TRUE);
-                requestService.getRequestRepository().save(request);
+                requestService.save(request);
             }
         }
         return "redirect:/requests";

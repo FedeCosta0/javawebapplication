@@ -12,6 +12,7 @@ public class Request {
     private Boolean accepted;
 
     public Request() {
+        this.accepted = false;
     }
 
     public Request(String description, String imageName, User user) {
@@ -19,6 +20,13 @@ public class Request {
         this.imageName = imageName;
         this.user = user;
         this.accepted = false;
+    }
+
+    public Request(Request request) {
+        this.description = request.getDescription();
+        this.imageName = request.getImageName();
+        this.user = request.getUser();
+        this.accepted = request.getAccepted();
     }
 
     @Id
@@ -67,26 +75,18 @@ public class Request {
     }
 
     @Override
+    @Transient
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Request request = (Request) o;
-        return Objects.equals(getId(), request.getId()) && Objects.equals(getDescription(), request.getDescription()) && Objects.equals(getImageName(), request.getImageName()) && Objects.equals(getUser(), request.getUser());
+        return Objects.equals(getDescription(), request.getDescription()) && Objects.equals(getImageName(), request.getImageName()) && Objects.equals(getUser(), request.getUser());
     }
 
     @Override
+    @Transient
     public int hashCode() {
-        return Objects.hash(getId(), getDescription(), getImageName(), getUser());
+        return Objects.hash(getDescription(), getImageName(), getUser());
     }
 
-    @Override
-    public String toString() {
-        return "Request{" +
-                "id=" + id +
-                ", description='" + description + '\'' +
-                ", imageName='" + imageName + '\'' +
-                ", user=" + user +
-                ", accepted=" + accepted +
-                '}';
-    }
 }

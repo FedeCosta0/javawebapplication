@@ -1,6 +1,5 @@
 package com.javawebapplication.service;
 
-import com.javawebapplication.domain.Authority;
 import com.javawebapplication.domain.User;
 import com.javawebapplication.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,21 +20,19 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User save(User user) throws Exception {
+    public User create_user(User user) throws Exception {
+        User user_to_be_saved = new User(user.getEmail(), user.getPassword(), user.getFirstname(), user.getLastname());
 
-        if (userRepository.existsUserByEmail(user.getEmail())) {
+        if (userRepository.existsUserByEmail(user_to_be_saved.getEmail())) {
             throw new Exception(
-                    "Email " + user.getEmail() + " taken");
+                    "Email " + user_to_be_saved.getEmail() + " taken");
         }
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
+        String encodedPassword = passwordEncoder.encode(user_to_be_saved.getPassword());
+        user_to_be_saved.setPassword(encodedPassword);
 
-        Authority authority = new Authority();
-        authority.setAuthority("ROLE_USER");
-        authority.setUser(user);
-        user.getAuthorities().add(authority);
-
-        return userRepository.save(user);
+        user_to_be_saved.addAuthority("ROLE_USER");
+        userRepository.save(user_to_be_saved);
+        return user_to_be_saved;
     }
 
 }
