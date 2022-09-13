@@ -5,21 +5,21 @@ import java.util.Objects;
 
 @Entity
 public class Request {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(length = 1000)
     private String description;
     private String imageName;
+    @ManyToOne
     private User user;
-    private Boolean accepted;
+    private Boolean accepted = Boolean.FALSE;
 
-    public Request() {
-        this.accepted = false;
-    }
+    public Request() {}
 
     public Request(String description, String imageName, User user) {
         this.description = description;
         this.imageName = imageName;
         this.user = user;
-        this.accepted = false;
     }
 
     public Request(Request request) {
@@ -29,8 +29,7 @@ public class Request {
         this.accepted = request.getAccepted();
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     public Long getId() {
         return id;
     }
@@ -38,7 +37,7 @@ public class Request {
         this.id = id;
     }
 
-    @Column(length = 1000)
+
     public String getDescription() {
         return description;
     }
@@ -53,7 +52,7 @@ public class Request {
         this.imageName = imageName;
     }
 
-    @ManyToOne
+
     public User getUser() {
         return user;
     }
@@ -80,13 +79,20 @@ public class Request {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Request request = (Request) o;
-        return Objects.equals(getDescription(), request.getDescription()) && Objects.equals(getImageName(), request.getImageName()) && Objects.equals(getUser(), request.getUser());
+        return Objects.equals(getDescription(), request.getDescription()) && Objects.equals(getImageName(), request.getImageName());
     }
 
     @Override
     @Transient
     public int hashCode() {
-        return Objects.hash(getDescription(), getImageName(), getUser());
+        return Objects.hash(getDescription(), getImageName());
     }
 
+    @Transient
+    public void erase() {
+        if (this.user != null) {
+            this.user.removeRequest(this);
+            this.user = null;
+        }
+    }
 }

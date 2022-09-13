@@ -30,34 +30,35 @@ public class RequestService {
 
     public Request create_request(Request request, User user, MultipartFile multipartFile) throws IOException {
         Request request_to_be_saved = new Request(request);
+        request.erase();
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
         request_to_be_saved.setImageName(fileName);
-        request_to_be_saved.setUser(user);
+        user.addRequest(request_to_be_saved);
 
         String uploadDir = "requests_images/" + user.getLastname() + "_" + user.getFirstname();
 
         FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-        user.addRequest(requestRepository.save(request_to_be_saved));
+        requestRepository.save(request_to_be_saved);
         return request_to_be_saved;
     }
 
-    public void delete(Request request){
-        requestRepository.delete(request);
+    public void deleteById(Long id) {
+        requestRepository.deleteById(id);
     }
 
-    public Optional<Request> findById(Long id){
+    public Optional<Request> findById(Long id) {
         return requestRepository.findById(id);
     }
 
-    public Iterable<Request> findAll(){
+    public Iterable<Request> findAll() {
         return requestRepository.findAll();
     }
 
-    public List<Request> findByUser(User user){
+    public List<Request> findByUser(User user) {
         return requestRepository.findByUser(user);
     }
 
-    public Request save(Request request){
+    public Request save(Request request) {
         return requestRepository.save(request);
     }
 

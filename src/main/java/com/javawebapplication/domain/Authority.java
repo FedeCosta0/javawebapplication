@@ -10,12 +10,13 @@ import java.util.Objects;
 public class Authority implements GrantedAuthority {
     @Serial
     private static final long serialVersionUID = 1272548942962614584L;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String authority;
+    @ManyToOne
     private User user;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     public Long getId() {
         return id;
     }
@@ -31,7 +32,7 @@ public class Authority implements GrantedAuthority {
         this.authority = authority;
     }
 
-    @ManyToOne
+
     public User getUser() {
         return user;
     }

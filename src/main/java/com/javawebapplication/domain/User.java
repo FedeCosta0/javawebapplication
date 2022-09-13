@@ -8,16 +8,18 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 public class User {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String email;
     private String password;
     private String firstname;
     private String lastname;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     private Set<Request> requests = new HashSet<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
     private Set<Authority> authorities = new HashSet<>();
 
-    public User() {
-    }
+    public User() {}
 
     public User(String email, String password, String firstname, String lastname) {
         this.email = email;
@@ -31,14 +33,13 @@ public class User {
     public User(User user) {
         this.email = user.getEmail();
         this.password = user.getPassword();
-        this.firstname = getFirstname();
-        this.lastname = getLastname();
+        this.firstname = user.getFirstname();
+        this.lastname = user.getLastname();
         this.requests = user.getRequests();
         this.authorities = user.getAuthorities();
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     public Long getId() {
         return id;
     }
@@ -60,22 +61,6 @@ public class User {
         this.password = password;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
-    public Set<Request> getRequests() {
-        return requests;
-    }
-    public void setRequests(Set<Request> requests) {
-        this.requests = requests;
-    }
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
-    public Set<Authority> getAuthorities() {
-        return authorities;
-    }
-    public void setAuthorities(Set<Authority> authorities) {
-        this.authorities = authorities;
-    }
-
     public String getFirstname() {
         return firstname;
     }
@@ -88,6 +73,20 @@ public class User {
     }
     public void setLastname(String lastname) {
         this.lastname = lastname;
+    }
+
+    public Set<Request> getRequests() {
+        return requests;
+    }
+    public void setRequests(Set<Request> requests) {
+        this.requests = requests;
+    }
+
+    public Set<Authority> getAuthorities() {
+        return authorities;
+    }
+    public void setAuthorities(Set<Authority> authorities) {
+        this.authorities = authorities;
     }
 
     @Transient
@@ -107,11 +106,6 @@ public class User {
         authorities.add(authority);
     }
 
-    @Transient
-    public void addRequest(Request request) {
-        this.requests.add(request);
-    }
-
     @Override
     @Transient
     public boolean equals(Object o) {
@@ -127,4 +121,26 @@ public class User {
         return Objects.hash(getEmail(), getFirstname(), getLastname());
     }
 
+    @Transient
+    public void removeRequest(Request requestTobeDeleted) {
+        this.requests.remove(requestTobeDeleted);
+    }
+
+    @Transient
+    public void erase() {
+        for (Authority auth : this.authorities) {
+            auth.setUser(null);
+            auth = null;
+        }
+        for (Request req : this.requests) {
+            req.setUser(null);
+            req = null;
+        }
+    }
+
+    @Transient
+    public void addRequest(Request request) {
+        this.requests.add(request);
+        request.setUser(this);
+    }
 }

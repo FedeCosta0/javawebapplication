@@ -52,6 +52,8 @@ class RequestServiceTest {
         ArgumentCaptor<Request> requestArgumentCaptor = ArgumentCaptor.forClass(Request.class);
         verify(mockRequestRepository).save(requestArgumentCaptor.capture());
         Request capturedRequest = requestArgumentCaptor.getValue();
+        System.out.println(capturedRequest);
+        System.out.println(request);
         assertThat(capturedRequest).isEqualTo(request);
     }
 

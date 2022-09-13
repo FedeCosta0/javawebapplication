@@ -20,7 +20,6 @@ import java.util.Optional;
 @Controller
 public class RequestController {
     private final RequestService requestService;
-
     @Autowired
     public RequestController(RequestService requestService) {
         this.requestService = requestService;
@@ -43,9 +42,14 @@ public class RequestController {
     }
 
     @GetMapping("/delete/{requestId}")
-    public String deleteRequest(@PathVariable Long requestId) {
-        Optional<Request> requestToBeDeleted = requestService.findById(requestId);
-        requestToBeDeleted.ifPresent(requestService::delete);
+    public String deleteRequest(@PathVariable Long requestId, @AuthenticationPrincipal User user) {
+        Optional<Request> optionalRequestToBeDeleted = requestService.findById(requestId);
+        if (optionalRequestToBeDeleted.isPresent()) {
+            Request requestTobeDeleted = optionalRequestToBeDeleted.get();
+            user.removeRequest(requestTobeDeleted);
+            requestTobeDeleted.setUser(null);
+            requestService.deleteById(requestTobeDeleted.getId());
+        }
         return "redirect:/requests";
     }
 

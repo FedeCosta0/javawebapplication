@@ -21,18 +21,16 @@ public class UserService {
     }
 
     public User create_user(User user) throws Exception {
-        User user_to_be_saved = new User(user.getEmail(), user.getPassword(), user.getFirstname(), user.getLastname());
-
-        if (userRepository.existsUserByEmail(user_to_be_saved.getEmail())) {
+        if (userRepository.existsUserByEmail(user.getEmail())) {
             throw new Exception(
-                    "Email " + user_to_be_saved.getEmail() + " taken");
+                    "Email " + user.getEmail() + " taken");
         }
+        User user_to_be_saved = new User(user);
+        user.erase();
         String encodedPassword = passwordEncoder.encode(user_to_be_saved.getPassword());
         user_to_be_saved.setPassword(encodedPassword);
-
         user_to_be_saved.addAuthority("ROLE_USER");
         userRepository.save(user_to_be_saved);
         return user_to_be_saved;
     }
-
 }
