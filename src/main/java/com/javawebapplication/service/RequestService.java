@@ -21,16 +21,14 @@ Service class for setting up the Request before saving it
 public class RequestService {
     private final RequestRepository requestRepository;
 
-
     @Autowired
     public RequestService(RequestRepository requestRepository) {
         this.requestRepository = requestRepository;
-
     }
 
     public Request create_request(Request request, User user, MultipartFile multipartFile) throws IOException {
         Request request_to_be_saved = new Request(request);
-        request.erase();
+        request.eraseDependencies();
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
         request_to_be_saved.setImageName(fileName);
         user.addRequest(request_to_be_saved);

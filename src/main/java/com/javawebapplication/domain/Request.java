@@ -5,7 +5,8 @@ import java.util.Objects;
 
 @Entity
 public class Request {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(length = 1000)
     private String description;
@@ -29,6 +30,32 @@ public class Request {
         this.accepted = request.getAccepted();
     }
 
+    @Transient
+    public void eraseDependencies() {
+        if (this.user != null) {
+            this.user.removeRequest(this);
+            this.user = null;
+        }
+    }
+
+    @Transient
+    public String getImagePath() {
+        if (imageName == null || id == null) return null;
+        return "/requests_images/" + this.user.getLastname() + "_" + this.user.getFirstname() + "/" + imageName;
+    }
+
+    @Override @Transient
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Request request = (Request) o;
+        return Objects.equals(this.description, request.getDescription()) && Objects.equals(this.imageName, request.getImageName());
+    }
+
+    @Override @Transient
+    public int hashCode() {
+        return Objects.hash(this.description, this.imageName);
+    }
 
     public Long getId() {
         return id;
@@ -36,7 +63,6 @@ public class Request {
     public void setId(Long id) {
         this.id = id;
     }
-
 
     public String getDescription() {
         return description;
@@ -52,7 +78,6 @@ public class Request {
         this.imageName = imageName;
     }
 
-
     public User getUser() {
         return user;
     }
@@ -67,32 +92,4 @@ public class Request {
         this.accepted = accepted;
     }
 
-    @Transient
-    public String getImagePath() {
-        if (imageName == null || id == null) return null;
-        return "/requests_images/" + getUser().getLastname() + "_" + getUser().getFirstname() + "/" + imageName;
-    }
-
-    @Override
-    @Transient
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Request request = (Request) o;
-        return Objects.equals(getDescription(), request.getDescription()) && Objects.equals(getImageName(), request.getImageName());
-    }
-
-    @Override
-    @Transient
-    public int hashCode() {
-        return Objects.hash(getDescription(), getImageName());
-    }
-
-    @Transient
-    public void erase() {
-        if (this.user != null) {
-            this.user.removeRequest(this);
-            this.user = null;
-        }
-    }
 }

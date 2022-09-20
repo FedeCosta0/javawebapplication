@@ -26,7 +26,7 @@ public class UserService {
                     "Email " + user.getEmail() + " taken");
         }
         User user_to_be_saved = new User(user);
-        user.erase();
+        user.eraseDependencies();
         String encodedPassword = passwordEncoder.encode(user_to_be_saved.getPassword());
         user_to_be_saved.setPassword(encodedPassword);
         user_to_be_saved.addAuthority("ROLE_USER");

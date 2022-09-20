@@ -8,7 +8,8 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 public class User {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String email;
     private String password;
@@ -39,6 +40,58 @@ public class User {
         this.authorities = user.getAuthorities();
     }
 
+    @Transient
+    public void addAuthority(String authority_level) {
+        Authority authority = new Authority();
+        authority.setAuthority(authority_level);
+        authority.setUser(this);
+        authorities.add(authority);
+    }
+
+    @Transient
+    public void addRequest(Request request) {
+        this.requests.add(request);
+        request.setUser(this);
+    }
+
+    @Transient
+    public void removeRequest(Request requestTobeDeleted) {
+        this.requests.remove(requestTobeDeleted);
+    }
+
+    @Transient
+    public void eraseDependencies() {
+        for (Authority auth : this.authorities) {
+            auth.setUser(null);
+            authorities.remove(auth);
+        }
+        for (Request req : this.requests) {
+            req.setUser(null);
+            requests.remove(req);
+        }
+    }
+
+    @Transient
+    public Boolean isAdmin() {
+        Boolean result = Boolean.FALSE;
+        for (Authority authority : authorities) {
+            result = result || authority.isAdmin();
+        }
+        return result;
+    }
+
+    @Override @Transient
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(getEmail(), user.getEmail()) && Objects.equals(getFirstname(), user.getFirstname()) && Objects.equals(getLastname(), user.getLastname());
+    }
+
+    @Override @Transient
+    public int hashCode() {
+        return Objects.hash(getEmail(), getFirstname(), getLastname());
+    }
 
     public Long getId() {
         return id;
@@ -89,58 +142,4 @@ public class User {
         this.authorities = authorities;
     }
 
-    @Transient
-    public Boolean isAdmin() {
-        Boolean result = Boolean.FALSE;
-        for (Authority authority : getAuthorities()) {
-            result = result || authority.isAdmin();
-        }
-        return result;
-    }
-
-    @Transient
-    public void addAuthority(String authority_level) {
-        Authority authority = new Authority();
-        authority.setAuthority(authority_level);
-        authority.setUser(this);
-        authorities.add(authority);
-    }
-
-    @Override
-    @Transient
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(getEmail(), user.getEmail()) && Objects.equals(getFirstname(), user.getFirstname()) && Objects.equals(getLastname(), user.getLastname());
-    }
-
-    @Override
-    @Transient
-    public int hashCode() {
-        return Objects.hash(getEmail(), getFirstname(), getLastname());
-    }
-
-    @Transient
-    public void removeRequest(Request requestTobeDeleted) {
-        this.requests.remove(requestTobeDeleted);
-    }
-
-    @Transient
-    public void erase() {
-        for (Authority auth : this.authorities) {
-            auth.setUser(null);
-            auth = null;
-        }
-        for (Request req : this.requests) {
-            req.setUser(null);
-            req = null;
-        }
-    }
-
-    @Transient
-    public void addRequest(Request request) {
-        this.requests.add(request);
-        request.setUser(this);
-    }
 }
