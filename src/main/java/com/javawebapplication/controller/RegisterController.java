@@ -1,4 +1,4 @@
-package com.javawebapplication.web;
+package com.javawebapplication.controller;
 
 import com.javawebapplication.domain.User;
 import com.javawebapplication.service.UserService;
@@ -25,7 +25,7 @@ public class RegisterController {
 
     @PostMapping("/register")
     public String register(User user) throws Exception {
-        userService.create_user(user);
+        userService.save_user(user);
         return "redirect:/login";
     }
 }

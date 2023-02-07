@@ -20,17 +20,15 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User create_user(User user) throws Exception {
+    public User save_user(User user) throws Exception {
         if (userRepository.existsUserByEmail(user.getEmail())) {
             throw new Exception(
                     "Email " + user.getEmail() + " taken");
         }
-        User user_to_be_saved = new User(user);
-        user.eraseDependencies();
-        String encodedPassword = passwordEncoder.encode(user_to_be_saved.getPassword());
-        user_to_be_saved.setPassword(encodedPassword);
-        user_to_be_saved.addAuthority("ROLE_USER");
-        userRepository.save(user_to_be_saved);
-        return user_to_be_saved;
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+        user.addAuthority("ROLE_USER");
+        userRepository.save(user);
+        return user;
     }
 }

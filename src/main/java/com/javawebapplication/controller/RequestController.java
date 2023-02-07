@@ -1,8 +1,9 @@
-package com.javawebapplication.web;
+package com.javawebapplication.controller;
 
 
 import com.javawebapplication.domain.Request;
 import com.javawebapplication.domain.User;
+import com.javawebapplication.enumeration.Status;
 import com.javawebapplication.service.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -38,7 +39,7 @@ public class RequestController {
         if (request.getDescription().isEmpty()) {
             return "redirect:/request/empty-description";
         }
-        requestService.create_request(request, user, multipartFile);
+        requestService.saveNewRequest(request, user, multipartFile);
         return "redirect:/requests";
     }
 
@@ -47,9 +48,7 @@ public class RequestController {
         Optional<Request> optionalRequestToBeDeleted = requestService.findById(requestId);
         if (optionalRequestToBeDeleted.isPresent()) {
             Request requestToBeDeleted = optionalRequestToBeDeleted.get();
-            user.removeRequest(requestToBeDeleted);
-            requestToBeDeleted.setUser(null);
-            requestService.deleteById(requestToBeDeleted.getId());
+            requestService.deleteRequest(requestToBeDeleted, user);
         }
         return "redirect:/requests";
     }
@@ -65,11 +64,8 @@ public class RequestController {
     public String requestsList(@AuthenticationPrincipal User user, ModelMap model) {
         Boolean isAdmin = user.isAdmin();
         Iterable<Request> requests;
-        if (isAdmin) {
-            requests = requestService.findAll();
-        } else {
-            requests = requestService.findByUser(user);
-        }
+        if (isAdmin) requests = requestService.findAll();
+        else requests = requestService.findByUser(user);
         model.put("requests", requests);
         return "requests";
     }
@@ -79,9 +75,61 @@ public class RequestController {
         Optional<Request> requestToBeAccepted = requestService.findById(requestId);
         if (requestToBeAccepted.isPresent()) {
             Request request = requestToBeAccepted.get();
-            if (!request.getAccepted()) {
-                request.setAccepted(Boolean.TRUE);
-                requestService.save(request);
+            if (request.getStatus() == Status.REQUEST_PENDING) {
+                request.setStatus(Status.REQUEST_ACCEPTED);
+                requestService.update(request);
+            }
+        }
+        return "redirect:/requests";
+    }
+
+    @GetMapping("/advance_payment/{requestId}")
+    public String advancePayment(@PathVariable Long requestId) {
+        Optional<Request> optRequest = requestService.findById(requestId);
+        if (optRequest.isPresent()) {
+            Request request = optRequest.get();
+            if (request.getStatus() == Status.REQUEST_ACCEPTED) {
+                request.setStatus(Status.DRAWING_IN_PROGRESS);
+                requestService.update(request);
+            }
+        }
+        return "redirect:/requests";
+    }
+
+    @GetMapping("/drawing_completed/{requestId}")
+    public String drawingCompleted(@PathVariable Long requestId) {
+        Optional<Request> optRequest = requestService.findById(requestId);
+        if (optRequest.isPresent()) {
+            Request request = optRequest.get();
+            if (request.getStatus() == Status.DRAWING_IN_PROGRESS) {
+                request.setStatus(Status.DRAWING_COMPLETED);
+                requestService.update(request);
+            }
+        }
+        return "redirect:/requests";
+    }
+
+    @GetMapping("/drawing_review/{requestId}")
+    public String drawingReview(@PathVariable Long requestId) {
+        Optional<Request> optRequest = requestService.findById(requestId);
+        if (optRequest.isPresent()) {
+            Request request = optRequest.get();
+            if (request.getStatus() == Status.DRAWING_COMPLETED) {
+                request.setStatus(Status.DRAWING_IN_PROGRESS);
+                requestService.update(request);
+            }
+        }
+        return "redirect:/requests";
+    }
+
+    @GetMapping("/make_appointment/{requestId}")
+    public String makeAppointment(@PathVariable Long requestId) {
+        Optional<Request> optRequest = requestService.findById(requestId);
+        if (optRequest.isPresent()) {
+            Request request = optRequest.get();
+            if (request.getStatus() == Status.DRAWING_COMPLETED) {
+                request.setStatus(Status.APPOINTMENT_MADE);
+                requestService.update(request);
             }
         }
         return "redirect:/requests";

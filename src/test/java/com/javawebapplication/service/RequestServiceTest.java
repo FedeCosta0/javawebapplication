@@ -4,6 +4,7 @@ import com.javawebapplication.domain.Request;
 import com.javawebapplication.domain.User;
 import com.javawebapplication.image_manager.FileUploadUtil;
 import com.javawebapplication.repository.RequestRepository;
+import com.javawebapplication.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,12 +30,14 @@ class RequestServiceTest {
     @Mock
     private RequestRepository mockRequestRepository;
     @Mock
+    private UserRepository mockUserRepository;
+    @Mock
     private RequestService requestService;
 
 
     @BeforeEach
     void setUp() {
-        requestService = new RequestService(mockRequestRepository);
+        requestService = new RequestService(mockRequestRepository, mockUserRepository);
     }
 
     @Test
@@ -43,16 +46,20 @@ class RequestServiceTest {
         // given
         MockMultipartFile mockFile = new MockMultipartFile("mockfile", "mockfile_name.jpg", "image/png", "some png".getBytes());
         User user = new User("user@user.com", "password", "Mario", "Rossi");
-        Request request = new Request("Request Description", mockFile.getOriginalFilename(), user);
+        String description = "Request Description";
+        Request request = new Request();
+        request.setDescription(description);
 
         // when
-        requestService.create_request(request, user, mockFile);
+        requestService.saveNewRequest(request, user, mockFile);
 
         // then
         ArgumentCaptor<Request> requestArgumentCaptor = ArgumentCaptor.forClass(Request.class);
         verify(mockRequestRepository).save(requestArgumentCaptor.capture());
         Request capturedRequest = requestArgumentCaptor.getValue();
-        assertThat(capturedRequest).isEqualTo(request);
+        assertThat(capturedRequest.getDescription()).isEqualTo(description);
+        assertThat(capturedRequest.getImageName()).isEqualTo(mockFile.getOriginalFilename());
+        assertThat(capturedRequest.getUser()).isEqualTo(user);
     }
 
     @Test
@@ -61,14 +68,16 @@ class RequestServiceTest {
         // given
         MockMultipartFile mockFile = new MockMultipartFile("mockfile", "mockfile_name.jpg", "image/png", "some png".getBytes());
         User user = new User("user@user.com", "password", "Mario", "Rossi");
-        Request request = new Request("Request Description", mockFile.getOriginalFilename(), user);
+        String description = "Request Description";
+        Request request = new Request();
+        request.setDescription(description);
 
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(mockFile.getOriginalFilename()));
         String uploadDir = "requests_images/" + user.getLastname() + "_" + user.getFirstname();
         MockedStatic<FileUploadUtil> dummyStatic = Mockito.mockStatic(FileUploadUtil.class);
 
         // when
-        requestService.create_request(request, user, mockFile);
+        requestService.saveNewRequest(request, user, mockFile);
 
         // then
         ArgumentCaptor<String> captureUploadDirectory = ArgumentCaptor.forClass(String.class);

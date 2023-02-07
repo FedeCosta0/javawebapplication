@@ -1,6 +1,5 @@
 package com.javawebapplication.service;
 
-import com.javawebapplication.domain.Authority;
 import com.javawebapplication.domain.User;
 import com.javawebapplication.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,12 +33,16 @@ class UserServiceTest {
     @DisplayName("Saving User: password correctly encoded")
     void isPasswordCorrectlyEncoded() throws Exception {
         // given
+        String email = "user@user.com";
         String raw_password = "test_password";
-        User user = new User("user@user.com", raw_password, "Mario", "Rossi");
+        String firstname = "Mario";
+        String lastname = "Rossi";
+
+        User user_to_be_saved = new User(email, raw_password, firstname, lastname);
         when(userRepository.existsUserByEmail(any())).thenReturn(false);
 
         // when
-        user = userService.create_user(user);
+        User user = userService.save_user(user_to_be_saved);
 
         // then
         assertThat(passwordEncoder.matches(raw_password, user.getPassword())).isEqualTo(true);
@@ -49,46 +52,59 @@ class UserServiceTest {
     @DisplayName("Saving User: Authority correctly assigned")
     void isAuthorityCorrectlyAssigned() throws Exception {
         // given
-        User user = new User("user@user.com", "password", "Mario", "Rossi");
-        Authority expected_authority = new Authority();
-        expected_authority.setAuthority("ROLE_USER");
+        String email = "user@user.com";
+        String raw_password = "test_password";
+        String firstname = "Mario";
+        String lastname = "Rossi";
+
+        User user_to_be_saved = new User(email, raw_password, firstname, lastname);
         when(userRepository.existsUserByEmail(any())).thenReturn(false);
 
         // when
-        user = userService.create_user(user);
+        User user = userService.save_user(user_to_be_saved);
 
         // then
         assertThat(user.getAuthorities().size()).isEqualTo(1);
-        assertThat(user.getAuthorities().contains(expected_authority)).isEqualTo(true);
+        assertThat(user.getAuthorities().iterator().next().isUser()).isEqualTo(true);
     }
 
     @Test
     @DisplayName("Saving User: Right user provided to the repository")
     void isRightUserProvidedToRepository() throws Exception {
         // given
-        User user = new User("user@user.com", "user", "Mario", "Rossi");
+        String email = "user@user.com";
+        String raw_password = "test_password";
+        String firstname = "Mario";
+        String lastname = "Rossi";
+
+        User user_to_be_saved = new User(email, raw_password, firstname, lastname);
         when(userRepository.existsUserByEmail(any())).thenReturn(false);
 
         // when
-        userService.create_user(user);
+        userService.save_user(user_to_be_saved);
 
         // then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
         verify(userRepository).save(userArgumentCaptor.capture());
         User capturedUser = userArgumentCaptor.getValue();
-        assertThat(capturedUser).isEqualTo(user);
+        assertThat(capturedUser).isEqualTo(user_to_be_saved);
     }
 
     @Test
     @DisplayName("Saving User: With taken email correctly throws exception")
     void saveNewUserWithEmailTaken() {
         // given
-        User user = new User("user@user.com", "user", "Mario", "Rossi");
+        String email = "user@user.com";
+        String raw_password = "test_password";
+        String firstname = "Mario";
+        String lastname = "Rossi";
+
+        User user_to_be_saved = new User(email, raw_password, firstname, lastname);
         when(userRepository.existsUserByEmail(any())).thenReturn(true);
 
         // then
-        assertThatThrownBy(() -> userService.create_user(user)).isInstanceOf(Exception.class)
-                .hasMessageContaining("Email " + user.getEmail() + " taken");
+        assertThatThrownBy(() -> userService.save_user(user_to_be_saved)).isInstanceOf(Exception.class)
+                .hasMessageContaining("Email " + email + " taken");
         verify(userRepository, never()).save(any());
     }
 }

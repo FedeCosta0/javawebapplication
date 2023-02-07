@@ -27,7 +27,7 @@
                         th:text="${request.user.getLastname()} + ' ' + ${request.user.getFirstname()}">Special title
                         treatment</h5>
                     <h6 class="card-subtitle mb-2 text-muted"
-                        th:text="${request.accepted ? 'Richiesta accettata' : 'Richiesta non ancora accettata'}">Card
+                        th:text="${request.getStatus().status}">Card
                         subtitle</h6>
                     <a class="btn btn-info" style="margin-top: 5.5em;"
                        th:href="@{/requests/{requestId}(requestId=${request.id})}">Visualizza richiesta</a>
