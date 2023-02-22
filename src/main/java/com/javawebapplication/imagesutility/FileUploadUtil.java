@@ -1,4 +1,4 @@
-package com.javawebapplication.image_manager;
+package com.javawebapplication.imagesutility;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

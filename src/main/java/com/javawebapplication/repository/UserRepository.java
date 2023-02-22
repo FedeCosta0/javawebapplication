@@ -11,7 +11,6 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
     Optional<User> findByEmail(String email);
-
     boolean existsUserByEmail(String email);
 
     @Query("SELECT u FROM User u LEFT JOIN FETCH u.requests WHERE u.id = :#{#id}")

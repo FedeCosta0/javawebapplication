@@ -20,7 +20,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User save_user(User user) throws Exception {
+    public User saveNewUser(User user) throws Exception {
         if (userRepository.existsUserByEmail(user.getEmail())) {
             throw new Exception(
                     "Email " + user.getEmail() + " taken");
@@ -28,6 +28,11 @@ public class UserService {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         user.addAuthority("ROLE_USER");
+        userRepository.save(user);
+        return user;
+    }
+
+    public User update(User user){
         userRepository.save(user);
         return user;
     }

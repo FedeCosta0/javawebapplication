@@ -2,7 +2,7 @@ package com.javawebapplication.service;
 
 import com.javawebapplication.domain.Request;
 import com.javawebapplication.domain.User;
-import com.javawebapplication.image_manager.FileUploadUtil;
+import com.javawebapplication.imagesutility.FileUploadUtil;
 import com.javawebapplication.repository.RequestRepository;
 import com.javawebapplication.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -62,8 +62,7 @@ class RequestServiceTest {
         assertThat(capturedRequest.getUser()).isEqualTo(user);
     }
 
-    @Test
-    @DisplayName("Saving Request: Image correctly saved")
+    @Test @DisplayName("Saving Request: Image correctly saved")
     void isImageCorrectlySaved() throws IOException {
         // given
         MockMultipartFile mockFile = new MockMultipartFile("mockfile", "mockfile_name.jpg", "image/png", "some png".getBytes());

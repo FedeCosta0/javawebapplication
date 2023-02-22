@@ -25,7 +25,7 @@ public class RegisterController {
 
     @PostMapping("/register")
     public String register(User user) throws Exception {
-        userService.save_user(user);
+        userService.saveNewUser(user);
         return "redirect:/login";
     }
 }

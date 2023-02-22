@@ -1,24 +1,21 @@
 package com.javawebapplication.controller;
 
-
 import com.javawebapplication.domain.Request;
 import com.javawebapplication.domain.User;
-import com.javawebapplication.enumeration.Status;
+import com.javawebapplication.domain.Status;
 import com.javawebapplication.service.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Optional;
 
 @Controller
+@RequestMapping("/request")
 public class RequestController {
     private final RequestService requestService;
 
@@ -27,13 +24,13 @@ public class RequestController {
         this.requestService = requestService;
     }
 
-    @GetMapping("/request")
+    @GetMapping("")
     public String createRequestForm(ModelMap model) {
         model.put("request", new Request());
         return "request";
     }
 
-    @PostMapping("/request")
+    @PostMapping("")
     public String createRequest(@RequestParam("image") MultipartFile multipartFile, @AuthenticationPrincipal User user,
                                 Request request) throws IOException {
         if (request.getDescription().isEmpty()) {
@@ -43,24 +40,7 @@ public class RequestController {
         return "redirect:/requests";
     }
 
-    @GetMapping("/delete/{requestId}")
-    public String deleteRequest(@PathVariable Long requestId, @AuthenticationPrincipal User user) {
-        Optional<Request> optionalRequestToBeDeleted = requestService.findById(requestId);
-        if (optionalRequestToBeDeleted.isPresent()) {
-            Request requestToBeDeleted = optionalRequestToBeDeleted.get();
-            requestService.deleteRequest(requestToBeDeleted, user);
-        }
-        return "redirect:/requests";
-    }
-
-    @GetMapping("/requests/{requestId}")
-    public String requestView(@PathVariable Long requestId, ModelMap model) {
-        Optional<Request> requestOpt = requestService.findById(requestId);
-        requestOpt.ifPresent(request -> model.put("request", request));
-        return "requestView";
-    }
-
-    @GetMapping("/requests")
+    @GetMapping("/list")
     public String requestsList(@AuthenticationPrincipal User user, ModelMap model) {
         Boolean isAdmin = user.isAdmin();
         Iterable<Request> requests;
@@ -70,8 +50,22 @@ public class RequestController {
         return "requests";
     }
 
+    @GetMapping("/delete/{requestId}")
+    public String deleteRequest(@PathVariable Long requestId, @AuthenticationPrincipal User user) {
+        Optional<Request> requestToBeDeleted = requestService.findById(requestId);
+        requestToBeDeleted.ifPresent(request -> requestService.deleteRequest(request, user));
+        return "redirect:/request/list";
+    }
+
+    @GetMapping("/view/{requestId}")
+    public String requestView(@PathVariable Long requestId, ModelMap model) {
+        Optional<Request> requestOpt = requestService.findById(requestId);
+        requestOpt.ifPresent(request -> model.put("request", request));
+        return "requestView";
+    }
+
     @GetMapping("/accept/{requestId}")
-    public String acceptRequestAdmin(@PathVariable Long requestId) {
+    public String acceptRequest(@PathVariable Long requestId) {
         Optional<Request> requestToBeAccepted = requestService.findById(requestId);
         if (requestToBeAccepted.isPresent()) {
             Request request = requestToBeAccepted.get();
@@ -80,7 +74,7 @@ public class RequestController {
                 requestService.update(request);
             }
         }
-        return "redirect:/requests";
+        return "redirect:/request/list";
     }
 
     @GetMapping("/advance_payment/{requestId}")
@@ -93,7 +87,7 @@ public class RequestController {
                 requestService.update(request);
             }
         }
-        return "redirect:/requests";
+        return "redirect:/request/list";
     }
 
     @GetMapping("/drawing_completed/{requestId}")
@@ -106,7 +100,7 @@ public class RequestController {
                 requestService.update(request);
             }
         }
-        return "redirect:/requests";
+        return "redirect:/request/list";
     }
 
     @GetMapping("/drawing_review/{requestId}")
@@ -119,7 +113,7 @@ public class RequestController {
                 requestService.update(request);
             }
         }
-        return "redirect:/requests";
+        return "redirect:/request/list";
     }
 
     @GetMapping("/make_appointment/{requestId}")
@@ -132,10 +126,10 @@ public class RequestController {
                 requestService.update(request);
             }
         }
-        return "redirect:/requests";
+        return "redirect:/request/list";
     }
 
-    @GetMapping("/request/empty-description")
+    @GetMapping("/empty-description")
     public String errorEmptyDescription() {
         return "empty-description";
     }

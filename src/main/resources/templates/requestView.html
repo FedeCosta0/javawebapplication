@@ -24,29 +24,29 @@
     </div>
 </div>
 <div class="col-3 mb-3 ms-auto" sec:authorize="!hasRole('ROLE_ADMIN')"
-     th:if="${request.status == T(com.javawebapplication.enumeration.Status).REQUEST_PENDING || request.status == T(com.javawebapplication.enumeration.Status).REQUEST_ACCEPTED}">
-    <a class="btn btn-danger ms-auto" th:href="@{/delete/{requestId}(requestId=${request.id})}">Elimina richiesta</a>
+     th:if="${request.status == T(com.javawebapplication.domain.Status).REQUEST_PENDING || request.status == T(com.javawebapplication.domain.Status).REQUEST_ACCEPTED}">
+    <a class="btn btn-danger ms-auto" th:href="@{/request/delete/{requestId}(requestId=${request.id})}">Elimina richiesta</a>
 </div>
 <div class="col-3 mb-3 ms-auto" sec:authorize="!hasRole('ROLE_ADMIN')"
-     th:if="${request.status == T(com.javawebapplication.enumeration.Status).REQUEST_ACCEPTED}">
-    <a class="btn btn-primary ms-auto" th:href="@{/advance_payment/{requestId}(requestId=${request.id})}">Versa
+     th:if="${request.status == T(com.javawebapplication.domain.Status).REQUEST_ACCEPTED}">
+    <a class="btn btn-primary ms-auto" th:href="@{/request/advance_payment/{requestId}(requestId=${request.id})}">Versa
         Anticipo</a>
 </div>
 <div class="col-3 mb-3 ms-auto" sec:authorize="!hasRole('ROLE_ADMIN')"
-     th:if="${request.status == T(com.javawebapplication.enumeration.Status).DRAWING_COMPLETED}">
-    <a class="btn btn-success ms-auto" th:href="@{/make_appointment/{requestId}(requestId=${request.id})}">Fissa
+     th:if="${request.status == T(com.javawebapplication.domain.Status).DRAWING_COMPLETED}">
+    <a class="btn btn-success ms-auto" th:href="@{/request/make_appointment/{requestId}(requestId=${request.id})}">Fissa
         Appuntamento</a>
-    <a class="btn btn-warning ms-auto" th:href="@{/drawing_review/{requestId}(requestId=${request.id})}">Richiedi
+    <a class="btn btn-warning ms-auto" th:href="@{/request/drawing_review/{requestId}(requestId=${request.id})}">Richiedi
         Revisione Disegno</a>
 </div>
 
 <div class="col-3 mb-3 ms-auto" sec:authorize="hasRole('ROLE_ADMIN')"
-     th:if="${request.status == T(com.javawebapplication.enumeration.Status).REQUEST_PENDING}">
-    <a class="btn btn-primary" th:href="@{/accept/{requestId}(requestId=${request.id})}">Accetta Richiesta</a>
+     th:if="${request.status == T(com.javawebapplication.domain.Status).REQUEST_PENDING}">
+    <a class="btn btn-primary" th:href="@{/request/accept/{requestId}(requestId=${request.id})}">Accetta Richiesta</a>
 </div>
 <div class="col-3 mb-3 ms-auto" sec:authorize="hasRole('ROLE_ADMIN')"
-     th:if="${request.status == T(com.javawebapplication.enumeration.Status).DRAWING_IN_PROGRESS}">
-    <a class="btn btn-success ms-auto" th:href="@{/drawing_completed/{requestId}(requestId=${request.id})}">Disegno
+     th:if="${request.status == T(com.javawebapplication.domain.Status).DRAWING_IN_PROGRESS}">
+    <a class="btn btn-success ms-auto" th:href="@{/request/drawing_completed/{requestId}(requestId=${request.id})}">Disegno
         Completato</a>
 </div>
 

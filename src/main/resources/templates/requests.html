@@ -30,7 +30,7 @@
                         th:text="${request.getStatus().status}">Card
                         subtitle</h6>
                     <a class="btn btn-info" style="margin-top: 5.5em;"
-                       th:href="@{/requests/{requestId}(requestId=${request.id})}">Visualizza richiesta</a>
+                       th:href="@{/request/view/{requestId}(requestId=${request.id})}">Visualizza richiesta</a>
                 </div>
                 <div class="col-3">
                     <img alt="image" class="img-thumbnail" height="300" src="" th:src="@{${request.imagePath}}"

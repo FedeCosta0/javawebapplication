@@ -2,7 +2,7 @@ package com.javawebapplication.service;
 
 import com.javawebapplication.domain.Request;
 import com.javawebapplication.domain.User;
-import com.javawebapplication.image_manager.FileUploadUtil;
+import com.javawebapplication.imagesutility.FileUploadUtil;
 import com.javawebapplication.repository.RequestRepository;
 import com.javawebapplication.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
@@ -23,7 +22,6 @@ import static org.springframework.data.domain.PageRequest.of;
 Service class for setting up the Request before saving it
 */
 @Service
-@Transactional
 public class RequestService {
     private final RequestRepository requestRepository;
     private final UserRepository userRepository;

@@ -29,8 +29,7 @@ class UserServiceTest {
         userService = new UserService(userRepository, passwordEncoder);
     }
 
-    @Test
-    @DisplayName("Saving User: password correctly encoded")
+    @Test @DisplayName("Saving User: password correctly encoded")
     void isPasswordCorrectlyEncoded() throws Exception {
         // given
         String email = "user@user.com";
@@ -42,14 +41,13 @@ class UserServiceTest {
         when(userRepository.existsUserByEmail(any())).thenReturn(false);
 
         // when
-        User user = userService.save_user(user_to_be_saved);
+        User user = userService.saveNewUser(user_to_be_saved);
 
         // then
         assertThat(passwordEncoder.matches(raw_password, user.getPassword())).isEqualTo(true);
     }
 
-    @Test
-    @DisplayName("Saving User: Authority correctly assigned")
+    @Test @DisplayName("Saving User: Authority correctly assigned")
     void isAuthorityCorrectlyAssigned() throws Exception {
         // given
         String email = "user@user.com";
@@ -61,15 +59,14 @@ class UserServiceTest {
         when(userRepository.existsUserByEmail(any())).thenReturn(false);
 
         // when
-        User user = userService.save_user(user_to_be_saved);
+        User user = userService.saveNewUser(user_to_be_saved);
 
         // then
         assertThat(user.getAuthorities().size()).isEqualTo(1);
-        assertThat(user.getAuthorities().iterator().next().isUser()).isEqualTo(true);
+        assertThat(user.getAuthorities().iterator().next().getAuthority()).isEqualTo("ROLE_USER");
     }
 
-    @Test
-    @DisplayName("Saving User: Right user provided to the repository")
+    @Test @DisplayName("Saving User: Right user provided to the repository")
     void isRightUserProvidedToRepository() throws Exception {
         // given
         String email = "user@user.com";
@@ -81,7 +78,7 @@ class UserServiceTest {
         when(userRepository.existsUserByEmail(any())).thenReturn(false);
 
         // when
-        userService.save_user(user_to_be_saved);
+        userService.saveNewUser(user_to_be_saved);
 
         // then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
@@ -90,8 +87,7 @@ class UserServiceTest {
         assertThat(capturedUser).isEqualTo(user_to_be_saved);
     }
 
-    @Test
-    @DisplayName("Saving User: With taken email correctly throws exception")
+    @Test @DisplayName("Saving User: With taken email correctly throws exception")
     void saveNewUserWithEmailTaken() {
         // given
         String email = "user@user.com";
@@ -103,7 +99,7 @@ class UserServiceTest {
         when(userRepository.existsUserByEmail(any())).thenReturn(true);
 
         // then
-        assertThatThrownBy(() -> userService.save_user(user_to_be_saved)).isInstanceOf(Exception.class)
+        assertThatThrownBy(() -> userService.saveNewUser(user_to_be_saved)).isInstanceOf(Exception.class)
                 .hasMessageContaining("Email " + email + " taken");
         verify(userRepository, never()).save(any());
     }

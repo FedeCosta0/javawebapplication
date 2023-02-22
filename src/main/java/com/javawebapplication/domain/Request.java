@@ -1,12 +1,9 @@
 package com.javawebapplication.domain;
 
-import com.javawebapplication.enumeration.Status;
-
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table
 public class Request {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -15,28 +12,18 @@ public class Request {
     private String description;
     private String imageName;
     private Status status = Status.REQUEST_PENDING;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne @JoinColumn(name = "user_id")
     private User user;
 
     public Request() {
     }
 
-    public Request(String description, String imageName, User user) {
+    public Request(Long id, String description, String imageName, User user) {
+        this.id = id;
         this.description = description;
         this.imageName = imageName;
         this.user = user;
     }
-
-    public Request(Request request) {
-        this.id = request.getId();
-        this.description = request.getDescription();
-        this.imageName = request.getImageName();
-        this.user = request.getUser();
-        this.status = request.getStatus();
-    }
-
 
     public String getImagePath() {
         if (imageName == null || id == null) return null;
@@ -46,7 +33,6 @@ public class Request {
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -54,7 +40,6 @@ public class Request {
     public String getDescription() {
         return description;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
@@ -62,27 +47,24 @@ public class Request {
     public String getImageName() {
         return imageName;
     }
-
     public void setImageName(String imageName) {
         this.imageName = imageName;
+    }
+
+
+    public Status getStatus() {
+        return Status.valueOf(status.name());
+    }
+    public void setStatus(Status status) {
+        this.status = Status.valueOf(status.name());
     }
 
     public User getUser() {
         return user;
     }
-
     public void setUser(User user) {
         this.user = user;
     }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
 
     @Override
     public boolean equals(Object o) {

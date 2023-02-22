@@ -1,4 +1,4 @@
-package com.javawebapplication.image_manager;
+package com.javawebapplication.imagesutility;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.Nullable;

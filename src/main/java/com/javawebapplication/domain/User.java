@@ -5,8 +5,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-@Entity
-@Table(name = "users")
+@Entity @Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,19 +28,7 @@ public class User {
         this.password = password;
         this.firstname = firstname;
         this.lastname = lastname;
-        this.requests = new HashSet<>();
-        this.authorities = new HashSet<>();
     }
-
-/*    public User(User user) {
-        this.id = user.getId();
-        this.email = user.getEmail();
-        this.password = user.getPassword();
-        this.firstname = user.getFirstname();
-        this.lastname = user.getLastname();
-        this.requests = user.getRequests();
-        this.authorities = user.getAuthorities();
-    }*/
 
     public void addAuthority(String authority_level) {
         Authority authority = new Authority();
@@ -61,9 +48,9 @@ public class User {
     }
 
     public Boolean isAdmin() {
-        Boolean result = Boolean.FALSE;
+        boolean result = Boolean.FALSE;
         for (Authority authority : authorities) {
-            result = result || authority.isAdmin();
+            result = result || authority.getAuthority().equals("ROLE_ADMIN");
         }
         return result;
     }
